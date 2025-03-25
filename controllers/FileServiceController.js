@@ -73,7 +73,7 @@ async  function htmlToPDFConverter(req,res,next){
           let generatedPDF = await htmltoPDF(htmlFileContent);
           fs1.writeFileSync("views/test.pdf", generatedPDF);
           generatedPDF = Buffer.from(generatedPDF);
-          console.log(Buffer.isBuffer(generatedPDF)); // Should print: true
+          //console.log(Buffer.isBuffer(generatedPDF)); // Should print: true
           console.log("successful generated pdf");
           res.removeHeader("Content-Length");
           res.setHeader("Content-Type", "application/pdf");
@@ -82,7 +82,7 @@ async  function htmlToPDFConverter(req,res,next){
           if (!res.headersSent) {
             res.end(generatedPDF);
           }
-          console.log(res);
+          // console.log(res);
           console.log("PDF Buffer Size:", generatedPDF.length);
         }else {
           res.status(404).json({ code: 404, status: 'Error', message: 'No file found' });

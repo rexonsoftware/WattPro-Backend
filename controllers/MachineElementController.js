@@ -95,14 +95,9 @@ async function getBaugruppeMachineElements(req, res) {
 }
 
 const updateMachineElement = async (req, res, next) => {
-
-
-    const { id } = req.params;  //Get Id
-    const { bauelement ,tatigkeit, bemerkung, sort_by, interne_bemerkungen } = req.body;
+    const { id, bauelement ,tatigkeit, bemerkung, sort_by, interne_bemerkungen } = req.body;
     const user = req.user;
 
-    if (id == "" || id === undefined) 
-        return res.status(400).json({ code: 400, status: 'Validation Error', message: "Record Nr ist erforderlich" });
     const errors = validationResult(req);
     if (!errors.isEmpty()) 
         return res.status(400).json({ code: 400, status: 'Validation Error', message: errors.array() });

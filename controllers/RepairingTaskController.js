@@ -99,7 +99,7 @@ async function addRepairingTasksGeneric(task, user) {
 };
 
 const addRepairingTasks = async (req, res, next) => {
-  const { repairing_contract_id, aufgabeposition = null, bezeichnung = null, datum, material = null
+  const { repairing_contract_id, aufgabeposition = null, bezeichnung = null, wartungsdatum, material = null
     , sachkundiger_id = null, clock_start = null, clock_end = null, baugruppe_inst_id = null,
     bauelement_id = null,bemerkung = null,tatigkeit_als = null, status = 2} = req.body;
   const user = { ID : 1 };    // req.user;
@@ -119,7 +119,7 @@ const addRepairingTasks = async (req, res, next) => {
       clock_start: clock_start,
       clock_end: clock_end,
       status: status,
-      datum: datum,
+      datum: wartungsdatum,
     };
     let repairTask = await addRepairingTasksGeneric(task, user);
     if (repairTask.code!=201) return res.status(repairTask.code).json({code: repairTask.code, status:repairTask.status, message: repairTask.message  });
@@ -132,7 +132,7 @@ const addRepairingTasks = async (req, res, next) => {
 
 async function updateRepairingTasksGeneric(task, user) {
   try {
-      const repairTask = await RepairingTaskModel.findByPk(task.repairing_task_id);
+      const repairTask = await RepairingTaskModel.findByPk(task.id);
       if (!repairTask) return {code: 404, status:'Error', message: 'Repairing task not found'  };
       if(task.aufgabeposition !== undefined && task.aufgabeposition !== null && task.aufgabeposition != "") repairTask.aufgabeposition = task.aufgabeposition; 
       if(task.bemerkung !== undefined && task.bemerkung !== null &&  task.bemerkung != "") repairTask.bemerkung = task.bemerkung; 
@@ -145,8 +145,10 @@ async function updateRepairingTasksGeneric(task, user) {
       if(task.clock_start !== undefined && task.clock_start !== null &&  task.clock_start != "") repairTask.clock_start = task.clock_start; 
       if(task.clock_end !== undefined && task.clock_end !== null &&  task.clock_end != "") repairTask.clock_end = task.clock_end; 
       if(task.status !== undefined && task.status !== null &&  task.status != "") repairTask.status = task.status; 
-      if(task.datum !== undefined && task.datum !== null &&  task.datum != ""){ 
-        let datum = task.datum;
+      if(task.wartungsdatum !== undefined && task.wartungsdatum !== null &&  task.wartungsdatum != ""){ 
+        
+        let datum = task.wartungsdatum;
+        console.log(datum);
           if (datum.includes('.')) {
               let [day, month, year] = datum.split('.');
               let war_date = new Date(`${year}-${month}-${day}`);
@@ -154,28 +156,28 @@ async function updateRepairingTasksGeneric(task, user) {
           }else{
               repairTask.datum = datum; 
           }
+          console.log(datum);
       }
       repairTask.updatedBy = user.ID;
       const repairContractdata  = await repairTask.save();
       return {code: 201, status:'Successful', message: 'Repairing Task has been updated successfully' };
   } catch (error) {
-      // console.log(error);
+      console.log(error);
       return {code: 500, status:'Error', message: 'Interner Serverfehler.' };
   }
 };
 
 const updateRepairingTasks = async (req, res, next) => {
-    const { repairing_task_id, aufgabeposition = '', bezeichnung = '', datum = '', material = ''
+    const { id, aufgabeposition = '', bezeichnung = '', wartungsdatum = '', material = ''
         , sachkundiger_id = '', clock_start = '', clock_end = '', baugruppe_inst_id = '',
         bauelement_id = '',bemerkung = '',tatigkeit_als = '', status = ''} = req.body;
-      
     const user = { ID : 1 };    // req.user;
-    if (repairing_task_id == "" || repairing_task_id === undefined) return res.status(400).json({code: 400, status: 'Validation Error', message: "Repairing Task Nr ist erforderlich" });
+    if (id == "" || id === undefined) return res.status(400).json({code: 400, status: 'Validation Error', message: "Repairing Task Nr ist erforderlich" });
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({code: 400, status: 'Validation Error', message: errors.array() });
     try {
         const task = {
-          repairing_task_id: repairing_task_id,
+          id: id,
           aufgabeposition: aufgabeposition,
           bemerkung: bemerkung,
           bezeichnung: bezeichnung,
@@ -187,7 +189,7 @@ const updateRepairingTasks = async (req, res, next) => {
           clock_start: clock_start,
           clock_end: clock_end,
           status: status,
-          datum: datum,
+          wartungsdatum: wartungsdatum,
         };
         let repairTask = await updateRepairingTasksGeneric(task, user);
         if (repairTask.code!=201) return res.status(repairTask.code).json({code: repairTask.code, status:repairTask.status, message: repairTask.message  });
@@ -241,7 +243,7 @@ async function updateBulkRepairingTasks(req, res, next) {
         if (repairTask.code!=201) return res.status(repairTask.code).json({code: repairTask.code, status:repairTask.status, message: repairTask.message  });
       }
       else if ((tasks.action == 3)) {
-        let repairTask = await deleteRepairingTasksGeneric(tasks.repairing_task_id, user);
+        let repairTask = await deleteRepairingTasksGeneric(tasks.id, user);
         if (repairTask.code!=200) return res.status(repairTask.code).json({code: repairTask.code, status:repairTask.status, message: repairTask.message  });
       }
       else{

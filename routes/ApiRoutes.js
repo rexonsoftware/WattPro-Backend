@@ -89,6 +89,7 @@ router.use(authenticateUser);
 
 //Installation
 router.get('/objektlist', allRoleMiddleware, InstallationController.getInstallations);
+router.get('/getobjektbyid', allRoleMiddleware, InstallationController.getInstallationById);
 router.post('/objekt/add', adminManagerMiddleware, createInstallationValidate, InstallationController.addInstallations);
 router.put('/objekt/update', adminManagerEngineerMiddleware, createInstallationValidate, InstallationController.updateInstallations);
 router.put('/objekt/update/assignpath', adminMiddleware, updateInstallationDirectoryPathValidate, InstallationController.updateInstallationsDirectoryPath);
@@ -157,7 +158,7 @@ router.get('/bauelement/delete', adminManagerMiddleware, ElementController.delet
 
 //Templates
 //Machine Template
-router.get('/baugruppetemplate/list', adminManagerMiddleware, MachineTemplateController.getMachinesTemplate);
+router.get('/baugruppetemplate/list', adminManagerEngineerMiddleware, MachineTemplateController.getMachinesTemplate);
 router.get('/baugruppetemplatebyid', adminManagerMiddleware, MachineTemplateController.getMachinesTemplateById);
 router.post('/baugruppetemplate/add', adminMiddleware, createBaugruppeTemplateValidate, MachineTemplateController.addMachinesTemplate);
 router.put('/baugruppetemplate/update', adminMiddleware, createBaugruppeTemplateValidate, MachineTemplateController.updateMachinesTemplate);
@@ -179,7 +180,7 @@ router.get('/tatigkeittemplate/delete', adminMiddleware, TatigkeitTemplateContro
 //Machine Element
 router.get('/reportlist', allRoleMiddleware, MachineElementController.getMachineElements);
 router.put('/report/update/all', allRoleMiddleware, MachineElementController.updateAllMachineElement);
-router.put('/report/update/:id?', allRoleMiddleware, updateReportValidate, MachineElementController.updateMachineElement);
+router.put('/report/update', allRoleMiddleware, updateReportValidate, MachineElementController.updateMachineElement);
 router.put('/reportelement/revert/all', adminManagerEngineerMiddleware, MachineElementController.revertAllMachineElement);
 router.put('/reportelement/revert/:id?', adminManagerEngineerMiddleware, MachineElementController.revertMachineElement);
 router.get('/offlinereportlist', allRoleMiddleware, MachineElementController.getBaugruppeMachineElements);

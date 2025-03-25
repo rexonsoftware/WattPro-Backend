@@ -565,7 +565,7 @@ async  function addReport(req,res,next){
             if (file.signature && file.signature.length > 0) {
                 getimgpath = await imageService.saveFile(file.signature[0],1);
                 if(getimgpath.code != 201){
-                    return res.status(getimgpath.code).json({code: getimgpath.code, status: getimgpath.status, message: getimgpath.message });
+                    // return res.status(getimgpath.code).json({code: getimgpath.code, status: getimgpath.status, message: getimgpath.message });
                 }else{
                     clientupdatedURL = getimgpath.message;
                 }
@@ -574,7 +574,7 @@ async  function addReport(req,res,next){
             if (file.emp_signature && file.emp_signature.length > 0) {
                 var getimgpath1 = await imageService.saveFile(file.emp_signature[0],1);
                 if(getimgpath1.code != 201){
-                    return res.status(getimgpath1.code).json({code: getimgpath1.code, status: getimgpath1.status, message: getimgpath1.message });
+                    // return res.status(getimgpath1.code).json({code: getimgpath1.code, status: getimgpath1.status, message: getimgpath1.message });
                 }else{
                     employeeupdatedURL = getimgpath1.message;
                 }

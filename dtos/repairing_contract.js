@@ -1,9 +1,9 @@
 class RepairingContractDTO {
     constructor(params) {
-       this.repairing_id = params.id;
-       this.id = params.contract_id;
+       this.id = params.id;
+       this.repairing_id = params.contract_id;
        this.bezeichnung = params.bezeichnung;
-       this.datum = params.datum;
+       this.wartungsdatum = params.datum;
        this.bemerkung = params.bemerkung;
        this.auftraggeber_name = params.auftraggeber_name;
        this.status = null;
@@ -13,7 +13,7 @@ class RepairingContractDTO {
 
 class RepairingTaskDTO {
     constructor(params) {
-       this.repairing_task_id = params.id;
+       this.id = params.id;
        this.aufgabeposition = params.aufgabeposition;
        this.bezeichnung = params.bezeichnung;
        this.user_fullname = params.fullname;
@@ -25,10 +25,10 @@ class RepairingTaskDTO {
 
 class RepairingTaskViewDTO {
     constructor(params) {
-       this.repairing_task_id = params.id;
+       this.id = params.id;
        this.aufgabeposition = params.aufgabeposition;
        this.bezeichnung = params.bezeichnung;
-       this.datum = params.datum;
+       this.wartungsdatum = params.datum;
        this.material = params.material;
        this.sachkundiger_id = params.user_id;
        this.clock_start = params.clock_start;

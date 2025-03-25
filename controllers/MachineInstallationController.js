@@ -44,16 +44,16 @@ async function getBaugruppeInstallation(req, res) {
         
         // const mappedData = data.rows; // Access the rows property to get the array of results
         let recordList = [];
-        if(data[0].currentData == 0){
-            if (code == 1) {
-                recordList = data.map(newdata => new MachineInstallationDTO_Id(newdata));
-            } else {
-                recordList = data.map(newdata => new MachineInstallationWithSignatureDTO(newdata));
-            }
-        }
         var tableName = "";
         var totalCount = 0;
         if (data.length > 0) {
+            if(data[0].currentData == 0){
+                if (code == 1) {
+                    recordList = data.map(newdata => new MachineInstallationDTO_Id(newdata));
+                } else {
+                    recordList = data.map(newdata => new MachineInstallationWithSignatureDTO(newdata));
+                }
+            }
             totalCount = data[0].Count;
             tableName = data[0].kunde;
         }

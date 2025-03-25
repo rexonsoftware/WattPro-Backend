@@ -1,7 +1,7 @@
 class ServiceContractDTO {
     constructor(params) {
-      this.service_id = params.id;
-      this.id = params.contract_id;
+      this.id = params.id;
+      this.service_id = params.contract_id;
       this.wartungsdatum = params.wartungsdatum;
       this.bezeichnung = params.bemerkungen;
       this.name_sachkundiger = params.userId;

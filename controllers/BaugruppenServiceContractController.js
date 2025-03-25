@@ -8,14 +8,6 @@ const Op = Sequelize.Op;
   const updatemachinecontractsbemerkungen = async (req, res, next) => {
     const { id = "", s_id = "",bgnr="", bemerkungen = "", hinweis_letzte_sv = "", baugruppen = ""} = req.body;
     const user = req.user;    // req.user;
-    // Validate input using the imported validateRoles array
-    if (id == "") 
-      return res.status(400).json({code: 400, status: 'Validation Error', message: "Baugruppen Installation Id ist erforderlich" });
-    if (s_id == "") 
-      return res.status(400).json({code: 400, status: 'Validation Error', message: "Service Contract Id ist erforderlich" });
-    if (baugruppen == "") 
-      return res.status(400).json({code: 400, status: 'Validation Error', message: "Baugruppe ist erforderlich" });
-    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({code: 400, status: 'Validation Error', message: errors.array() });

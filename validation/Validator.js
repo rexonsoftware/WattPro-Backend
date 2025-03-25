@@ -44,7 +44,7 @@ const updateInstallationDirectoryPathValidate = [
 
 const createServiceContractValidate = [
   body('installation_id').notEmpty().withMessage('Objekt ist erforderlich'),
-  body('contract_id').notEmpty().withMessage('Contract Nr ist erforderlich'),
+  body('service_id').notEmpty().withMessage('Contract Nr ist erforderlich'),
   body('wartungsdatum')
     .notEmpty().withMessage('Wartungsdatum is required')
     .custom((value) => {
@@ -91,6 +91,7 @@ const updateTatigkeitTemplateValidate = [
 ];
 
 const updateReportValidate = [
+  body('id').notEmpty().withMessage('Bauelement Id is required'),
   body('bemerkung').notEmpty().withMessage('Bemerkung ist required'),
   body('sort_by').isNumeric().withMessage('Sort By must be a number'),
 ];
@@ -140,7 +141,10 @@ const sendemail = [
 
 const MachineServiceContractValidate = [
   // body('kundennummer').notEmpty().withMessage('Kunden_nr required'),
-  body('bemerkungen').notEmpty().withMessage('bemerkungen Name erforderlich'),
+  body('id').notEmpty().withMessage('Baugruppen Id ist erforderlich'),
+  body('s_id').notEmpty().withMessage('Service Contract Id ist erforderlich'),
+  body('bgnr').notEmpty().withMessage('Bgnr ist erforderlich'),
+  body('baugruppen').notEmpty().withMessage('Baugruppen Name ist erforderlich'),
 ];
 
 const updateMetaImageValidate = [
@@ -151,8 +155,8 @@ const updateMetaImageValidate = [
 const createRepairingContractValidate = [
   body('installation_id').notEmpty().withMessage('Objekt ist erforderlich'),
   body('contract_id').notEmpty().withMessage('Contract Nr ist erforderlich'),
-  body('datum')
-    .notEmpty().withMessage('Datum is required')
+  body('wartungsdatum')
+    .notEmpty().withMessage('Wartungsdatum is required')
     .custom((value) => {
       // Use a custom function to check if 'wartungsdatum' is a valid date
       if ((/^\d{2}.\d{2}.\d{4}$/.test(value)) || (/^\d{4}-\d{2}-\d{2}$/.test(value))) {
@@ -168,7 +172,7 @@ const createRepairingTaskValidate = [
   body('repairing_contract_id').notEmpty().withMessage('Repairing contract ist erforderlich'),
   body('aufgabeposition').notEmpty().withMessage('Aufgabeposition ist erforderlich'),
   body('bezeichnung').notEmpty().withMessage('Bezeichnung ist erforderlich'),
-  body('datum')
+  body('wartungsdatum')
     .notEmpty().withMessage('Datum is required')
     .custom((value) => {
       // Use a custom function to check if 'wartungsdatum' is a valid date

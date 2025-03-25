@@ -1,7 +1,7 @@
 // const sequelize = require('../utils/database');
 const db = require("../models/ApplyRelation");
 const {InstallationModel, BaugruppeServiceContractModel} = db;
-const InstallationDTO = require('../dtos/installtiondto');
+const {InstallationDTO, InstallationDetailDTO} = require('../dtos/installtiondto');
 const {Sequelize, QueryTypes} = require('sequelize');
 const { validationResult } = require('express-validator');
 const Op = Sequelize.Op;
@@ -66,24 +66,34 @@ const findByKunden_nr = (knr) => {
        }
   }
 
-  const addInstallations = async (req, res, next) => {
-    const { kundennummer = null, project_nr = null, kundenname, bemerkungen,kunden_nummer,contactperson,address, strabe, plz, ort, tel, fax, email, jhare} = req.body;
-    // const user = { ID : 1 };    // req.user;
-    const user = req.user;
-    // Validate input using the imported validateRoles array
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) 
-    {
-      return res.status(400).json({code: 400, status: 'Validation Error', message: errors.array() });
+  const getInstallationById = async (req, res, next) => {
+    const { id } = req.query;
+    try {
+      if (id == "" || id === undefined) return res.status(400).json({code: 400, status: 'Validation Error', message: "Kunde Id ist erforderlich" });
+      const data = await InstallationModel.findByPk(id);
+      if (!data) return res.status(404).json({code: 404, status:'Error', message: 'Kunde not found'  });
+      const recordList = new InstallationDetailDTO(data.dataValues);
+      var tableName = data.kunde;
+      res.status(200).json({
+        code: 200, status: 'Successful', message: 'Record extracted successfully',
+        tableName:tableName, records: recordList
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ code: 500, status:'Error', message: 'Interner Serverfehler.' });
     }
+  }
+
+  const addInstallations = async (req, res, next) => {
+    const { objekt_nr = null, kundenname, bemerkungen,contactperson,address, strabe, plz, ort, tel, fax, email, jhare} = req.body;
+    const user = req.user;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({code: 400, status: 'Validation Error', message: errors.array() });
     try {  
         const newUser = await InstallationModel.create({
-          kunden_nr: kundennummer,
-          project_nr: project_nr,
+          project_nr: objekt_nr,
           kunde: kundenname,
-          kunde_erp: kundenname,
           bemerkungen: bemerkungen,
-          kundennummer: kunden_nummer,
           contactperson: contactperson,
           address: address,
           strabe: strabe,
@@ -103,27 +113,18 @@ const findByKunden_nr = (knr) => {
   };
 
   const updateInstallations = async (req, res, next) => {
-    const { id, kunden_nr = null, project_nr ,kundenname, bemerkungen,kundennummer,contactperson,address, strabe, plz, ort, tel, fax, email, jhare} = req.body;
+    const { id, objekt_nr ,kundenname, bemerkungen,contactperson,address, strabe, plz, ort, tel, fax, email, jhare} = req.body;
     const user = req.user;    // req.user;
-    // Validate input using the imported validateRoles array
-    if (id == "" || id === undefined) {
-      return res.status(400).json({code: 400, status: 'Validation Error', message: "Kunden Id ist erforderlich" });
-    }
+    if (id == "" || id === undefined) return res.status(400).json({code: 400, status: 'Validation Error', message: "Kunden Id ist erforderlich" });
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({code: 400, status: 'Validation Error', message: errors.array() });
-    }
+    if (!errors.isEmpty()) return res.status(400).json({code: 400, status: 'Validation Error', message: errors.array() });
     try {
       const installationc = await InstallationModel.findByPk(id);
-      if (!installationc) {
-        return res.status(404).json({code: 404, status:'Error', message: 'Kunden not found'  });
-      }
-      installationc.kunden_nr = kunden_nr;
-      installationc.project_nr = project_nr;
+      if (!installationc) return res.status(404).json({code: 404, status:'Error', message: 'Kunden not found'  });
+      
+      installationc.project_nr = objekt_nr;
       installationc.kunde = kundenname;
-      installationc.kunde_erp = kundenname;
       installationc.bemerkungen = bemerkungen;
-      installationc.kundennummer = kundennummer;
       installationc.contactperson = contactperson;
       installationc.address = address;
       installationc.strabe = strabe;
@@ -135,6 +136,7 @@ const findByKunden_nr = (knr) => {
       installationc.jhare = jhare;
       installationc.updatedBy = user.ID;
       const installationdata  = await installationc.save();
+
       res.status(201).json({code: 201, status:'Successful', message: 'Kunden has been updated successfully' });
       } catch (error) {
       console.log(error);
@@ -162,25 +164,20 @@ const findByKunden_nr = (knr) => {
   const deleteInstallations = async (req, res, next) => {
     const { id } = req.query;  //Get Id
     const user = req.user;    // req.user;
-    if (id == "" || id === undefined) {
-      return res.status(400).json({code: 400, status: 'Validation Error', message: "Kunden Nr ist erforderlich" });
-    }
+    if (id == "" || id === undefined) return res.status(400).json({code: 400, status: 'Validation Error', message: "Kunden Nr ist erforderlich" });
     try {
       const installationc = await InstallationModel.findByPk(id);
-      if (!installationc) {
-        return res.status(404).json({code: 404, status:'Error', message: 'Kunden not found'  });
-      }
+      if (!installationc) return res.status(404).json({code: 404, status:'Error', message: 'Kunden not found'  });
       installationc.deletedBy = user.ID;
       const installationdata  = await installationc.destroy();
       res.status(201).json({code: 201, status:'Successful', message: 'Kunden deleted successfully' });
-      } catch (error) {
-      console.log(error);
-        res.status(500).json({code: 500, status:'Error', message: 'Interner Serverfehler.' });
+    } catch (error) {
+      res.status(500).json({code: 500, status:'Error', message: 'Interner Serverfehler.' });
     }
   };
 
 module.exports = {
-  getInstallations,addInstallations,updateInstallations,deleteInstallations,updateInstallationsDirectoryPath
+  getInstallations,getInstallationById,addInstallations,updateInstallations,deleteInstallations,updateInstallationsDirectoryPath
 };
   
  

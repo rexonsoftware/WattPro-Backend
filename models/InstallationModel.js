@@ -1,11 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
     const InstallationModel = sequelize.define('installation', {
         id: {type: DataTypes.INTEGER, autoIncrement: true, allowNull: false, primaryKey: true},
-        kunden_nr: {type:DataTypes.INTEGER, allowNull: true,},
         project_nr: {type:DataTypes.STRING, allowNull: true, }, 
         kunde: {type:DataTypes.STRING, allowNull: true, }, 
-        kunde_erp: {type:DataTypes.STRING, allowNull: true, }, 
-        kundennummer: {type:DataTypes.STRING, allowNull: true, },
         bemerkungen: {type:DataTypes.STRING, allowNull: true, },
         contactperson: {type:DataTypes.STRING, allowNull: true, },
         address: {type:DataTypes.STRING, allowNull: true, },
@@ -24,5 +21,5 @@ module.exports = (sequelize, DataTypes) => {
         tableName: 'installations',
         paranoid: true
     });
-      return InstallationModel;
+    return InstallationModel;
 }

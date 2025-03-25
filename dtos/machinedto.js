@@ -1,7 +1,7 @@
 class MachineDTO {
     constructor(params) 
     {
-        this.baugruppe_nr = params.id;
+        this.id = params.id;
         // this.baugruppe_nr = params.baugruppe_nr;
         this.baugruppe = params.baugruppe;
         this.bgnr = params.bgnr;
@@ -11,8 +11,7 @@ class MachineDTO {
 
 class MachineInstallationDTO {
     constructor(params) {
-      this.baugruppe_nr = params.BaugruppeInstallationsId;
-
+      this.id = params.BaugruppeInstallationsId;
       this.bgnr = params.bgnr;
       this.baugruppe = params.baugruppe;
       this.hinweis_letzte_sv = params.hinweis_letzte_sv;
@@ -24,8 +23,7 @@ class MachineInstallationDTO {
 class MachineInstallationWithSignatureDTO {
   constructor(params) {
     // console.log(params);
-    this.baugruppe_nr = params.BaugruppeInstallationsId;
-	
+    this.id = params.BaugruppeInstallationsId;
     this.bgnr = params.bgnr;
     this.baugruppe = params.baugruppe;
     this.hinweis_letzte_sv = params.hinweis_letzte_sv;
@@ -49,7 +47,7 @@ class MachineInstallationWithSignatureDTO {
 
 class Baugruppelist {
   constructor(params,isNew) {
-    this.baugruppe_nr = params.id;
+    this.id = params.id;
     this.baugruppe = params.baugruppe;
     this.bgnr = params.bgnr;
     this.isnew = isNew;
@@ -65,7 +63,7 @@ class MachineInstallationDTO_Id {
 
 class MachineInstallationDropdownDto {
   constructor(params) {
-    this.baugruppe_id = params.BaugruppeInstallationsId;
+    this.id = params.BaugruppeInstallationsId;
     this.baugruppe = params.baugruppe;
     this.bgnr = params.bgnr;
   }

@@ -31,7 +31,6 @@ async function getRepairingContracts(req, res){
           id : data[0].kunden_id,
           project_nr: data[0].project_nr,
           kunde: data[0].kunde,
-          kundennummer: data[0].kundennummer,
           contactperson: data[0].contactperson,
           address: data[0].address,
           email: data[0].email,
@@ -44,6 +43,7 @@ async function getRepairingContracts(req, res){
       NumberOfRecords: totalCount, tableName: tableName,kunden: kunden, recordList:recordList});
     } catch (error) 
     {
+        console.log(error);
         res.status(500).json({ code: 500, status:'Error', message: 'Interner Serverfehler.'  });
     }
 }
@@ -70,7 +70,7 @@ async function getRepairingContracts(req, res){
 
 
 const addRepairingContracts = async (req, res, next) => {
-  const { installation_id, contract_id, bezeichnung = null, datum, auftraggeber_name = null, bemerkung = null} = req.body;
+  const { installation_id, contract_id, bezeichnung = null, wartungsdatum, auftraggeber_name = null, bemerkung = null} = req.body;
   const user = { ID : 1 };    // req.user;
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({code: 400, status: 'Validation Error', message: errors.array() });
@@ -83,11 +83,11 @@ const addRepairingContracts = async (req, res, next) => {
       if (repairContract) return res.status(400).json({code: 400, status:'Error', message: 'Die Vertragsnummer existiert bereits.'  });
       
       let datumFormat=null;
-      if (datum.includes('.')) {
-            let [day, month, year] = datum.split('.');
+      if (wartungsdatum.includes('.')) {
+            let [day, month, year] = wartungsdatum.split('.');
             datumFormat = new Date(`${year}-${month}-${day}`);
       }else{
-            datumFormat = datum; 
+            datumFormat = wartungsdatum; 
       }
 
       const newContract = await RepairingContractModel.create({
@@ -109,7 +109,7 @@ const addRepairingContracts = async (req, res, next) => {
 
 
 const updateRepairingContracts = async (req, res, next) => {
-    const { id, contract_id = '', bezeichnung = '', datum = '', auftraggeber_name = '', bemerkung = ''} = req.body;
+    const { id, contract_id = '', bezeichnung = '', wartungsdatum = '', auftraggeber_name = '', bemerkung = ''} = req.body;
     const user = { ID : 1 };    // req.user;
     // Validate input using the imported validateRoles array
     if (id == "" || id === undefined) return res.status(400).json({code: 400, status: 'Validation Error', message: "Repairing Contract Nr ist erforderlich" });
@@ -123,13 +123,13 @@ const updateRepairingContracts = async (req, res, next) => {
         if(bemerkung != "") repairContract.bemerkung = bemerkung; 
         if(bezeichnung != "") repairContract.bezeichnung = bezeichnung; 
         if(auftraggeber_name != "") repairContract.auftraggeber_name = auftraggeber_name; 
-        if(datum != ""){ 
-            if (datum.includes('.')) {
-                let [day, month, year] = datum.split('.');
+        if(wartungsdatum != ""){ 
+            if (wartungsdatum.includes('.')) {
+                let [day, month, year] = wartungsdatum.split('.');
                 let war_date = new Date(`${year}-${month}-${day}`);
                 repairContract.datum = war_date; 
             }else{
-                repairContract.datum = datum; 
+                repairContract.datum = wartungsdatum; 
             }
         }
         repairContract.updatedBy = user.ID;
